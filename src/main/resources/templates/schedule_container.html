@@ -1,0 +1,26 @@
+<div id="schedule-container">
+    <div class="tabs-container">
+        <button hx-get="/schedule/day?val=1" 
+                hx-target="#schedule-container" 
+                hx-swap="outerHTML" 
+                class="tab-btn {#if currentDay == 1}active{/if}">
+            Day 1 (June 3)
+        </button>
+        <button hx-get="/schedule/day?val=2" 
+                hx-target="#schedule-container" 
+                hx-swap="outerHTML" 
+                class="tab-btn {#if currentDay == 2}active{/if}">
+            Day 2 (June 4)
+        </button>
+        <button hx-get="/schedule/day?val=0" 
+                hx-target="#schedule-container" 
+                hx-swap="outerHTML" 
+                class="tab-btn {#if currentDay == 0}active{/if}">
+            <i class="fa-solid fa-star"></i> My Schedule
+        </button>
+    </div>
+    
+    <div id="schedule-list-content" style="margin-top: 15px;">
+        {#include schedule_list sessionViews=sessionViews timeList=timeList bookmarkedIds=bookmarkedIds /}
+    </div>
+</div>

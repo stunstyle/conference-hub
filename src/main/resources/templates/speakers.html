@@ -1,0 +1,57 @@
+{#include base}
+    {#body}
+        <div class="text-center" style="margin-bottom: 24px;">
+            <h1 style="font-size: 2rem; margin-bottom: 6px;">Speakers</h1>
+            <div class="subtitle">Meet the Experts at JPrime 2026</div>
+        </div>
+
+        <div class="container" style="max-width: 1000px; padding: 0;">
+            {#if speakers.isEmpty}
+                <div class="card text-center" style="padding: 30px; color: var(--text-secondary);">
+                    <i class="fa-solid fa-microphone" style="font-size: 2rem; margin-bottom: 10px; display: block;"></i>
+                    No speakers announced yet. Check back soon!
+                </div>
+            {#else}
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 24px;">
+                    {#for speaker in speakers}
+                        <div class="card" style="padding: 0; display: flex; flex-direction: column; overflow: hidden; height: 100%;">
+                            <div style="position: relative; width: 100%; padding-top: 100%; background: var(--surface-light);">
+                                {#if speaker.pictureUrl}
+                                    <img src="{speaker.pictureUrl}" alt="{speaker.firstName} {speaker.lastName}" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover;">
+                                {#else}
+                                    <div style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; font-size: 3rem; font-weight: 700; color: #fff; background: var(--secondary-grad);">
+                                        {speaker.firstName.substring(0, 1)}{speaker.lastName.substring(0, 1)}
+                                    </div>
+                                {/if}
+                            </div>
+                            <div style="padding: 20px; display: flex; flex-direction: column; flex: 1; gap: 12px;">
+                                <div>
+                                    <div style="font-weight: 800; font-size: 1.3rem;">{speaker.firstName} {speaker.lastName}</div>
+                                    <div style="font-size: 0.85rem; color: var(--neon-blue); font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; margin-top: 2px;">{speaker.company}</div>
+                                </div>
+                                
+                                {#if speaker.bio}
+                                    <div style="color: var(--text-secondary); font-size: 0.95rem; line-height: 1.5; flex: 1;">
+                                        {speaker.bio}
+                                    </div>
+                                {/if}
+
+                                <div style="display: flex; gap: 10px; margin-top: auto; padding-top: 10px;">
+                                    {#if speaker.twitter}
+                                        <a href="https://twitter.com/{speaker.twitter}" target="_blank" class="btn btn-secondary" style="padding: 6px 12px; font-size: 0.85rem; border-radius: 20px; text-decoration: none; display: inline-flex; align-items: center; gap: 6px; flex: 1; justify-content: center;">
+                                            <i class="fa-brands fa-twitter" style="color: #1DA1F2;"></i> @{speaker.twitter}
+                                        </a>
+                                    {#else}
+                                        <a href="#" class="btn btn-secondary" style="padding: 6px 12px; font-size: 0.85rem; border-radius: 20px; text-decoration: none; display: inline-flex; align-items: center; gap: 6px; flex: 1; justify-content: center;">
+                                            <i class="fa-brands fa-linkedin" style="color: #0077b5;"></i> LinkedIn
+                                        </a>
+                                    {/if}
+                                </div>
+                            </div>
+                        </div>
+                    {/for}
+                </div>
+            {/if}
+        </div>
+    {/body}
+{/include}

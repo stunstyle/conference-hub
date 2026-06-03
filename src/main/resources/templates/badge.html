@@ -1,0 +1,124 @@
+{#include base activePage="badge" title="My Ticket Badge - JPrime 2026"}
+    {#body}
+        <h1 style="text-align: center; margin-bottom: 6px;">My Digital Badge</h1>
+        <div class="subtitle" style="margin-bottom: 20px;">Your ticket to JPrime 2026 events</div>
+
+        {#if errorMsg}
+            <div class="card" style="background: rgba(239, 68, 68, 0.1); border-color: rgba(239, 68, 68, 0.25); color: #fca5a5; padding: 12px 16px; margin-bottom: 16px; font-weight: 500;">
+                <i class="fa-solid fa-triangle-exclamation"></i> {errorMsg}
+            </div>
+        {/if}
+
+        {#if attendee == null}
+            <!-- Search Badge Form -->
+            <div class="card">
+                <h3 class="card-title" style="margin-bottom: 12px;">Retrieve Your Ticket</h3>
+                {#if showRegisterForm}
+                    <p style="font-size: 0.9rem; color: var(--text-secondary); margin-bottom: 16px;">
+                        We couldn't find an imported ticket for <strong>{prefillEmail}</strong>. If you are a last-minute attendee or want to register manually, please fill out your details below to generate your badge.
+                    </p>
+                    <form method="POST" action="/badge/register">
+                        <input type="hidden" name="email" value="{prefillEmail}">
+                        <div class="form-group">
+                            <label class="form-label" for="firstName">First Name</label>
+                            <input type="text" id="firstName" name="firstName" required class="form-control" style="margin-top: 4px;">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="lastName">Last Name</label>
+                            <input type="text" id="lastName" name="lastName" required class="form-control" style="margin-top: 4px;">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="company">Company</label>
+                            <input type="text" id="company" name="company" required class="form-control" style="margin-top: 4px;">
+                        </div>
+                        
+                        <button type="submit" class="btn" style="width: 100%; font-size: 0.95rem; padding: 12px; background: var(--accent-grad);">
+                            <i class="fa-solid fa-user-plus"></i> Register Ticket Manually
+                        </button>
+                    </form>
+                {#else}
+                    <p style="font-size: 0.9rem; color: var(--text-secondary); margin-bottom: 16px;">
+                        Enter the email address associated with your JPrime ticket order. We'll load your name badge and QR check-in code.
+                    </p>
+                    
+                    <form method="POST" action="/badge/search">
+                        <div class="form-group">
+                            <label class="form-label" for="email">Email Address</label>
+                            <input type="email" id="email" name="email" required class="form-control" placeholder="attendee@company.com" style="margin-top: 4px;">
+                        </div>
+                        
+                        <button type="submit" class="btn" style="width: 100%; font-size: 0.95rem; padding: 12px;">
+                            <i class="fa-solid fa-search"></i> Find My Badge
+                        </button>
+                    </form>
+                {/if}
+
+                <div style="margin-top: 20px; border-top: 1px dashed var(--border-color); padding-top: 16px;">
+                    <p style="font-size: 0.8rem; color: var(--text-secondary); line-height: 1.4;">
+                        💡 <strong>Jury / Tester Hint:</strong> Test with one of these seeded attendee emails to preview the badge:
+                        <br>&bull; <code style="color: var(--neon-blue);">gocata@jprime.io</code>
+                        <br>&bull; <code style="color: var(--neon-blue);">ivan@jprime.io</code>
+                        <br>&bull; <code style="color: var(--neon-blue);">maria@jprime.io</code>
+                    </p>
+                </div>
+            </div>
+        {#else}
+            <!-- Badge Display -->
+            <div class="badge-frame">
+                <div class="badge-type">ATTENDEE</div>
+                
+                <div style="margin-top: 15px;">
+                    <div class="badge-name">{attendee.getFullName}</div>
+                    <div class="badge-company">{attendee.company}</div>
+                </div>
+
+                <div class="badge-qr">
+                    <img src="data:image/png;base64,{qrCode}" alt="Check-in QR Code" style="display: block; width: 160px; height: 160px;">
+                </div>
+
+                <div style="font-family: monospace; font-size: 0.85rem; color: var(--text-secondary);">
+                    TICKET: {attendee.ticketCode}
+                </div>
+            </div>
+
+            <!-- Closing ceremony Raffle check-in section -->
+            <div class="card" style="margin-top: 24px; border-color: {#if attendee.checkedIn}var(--neon-green){#else}var(--neon-pink){/if};">
+                {#if attendee.checkedIn}
+                    <div style="text-align: center; color: var(--neon-green); font-weight: 700; font-size: 1.1rem; padding: 10px 0;">
+                        <i class="fa-solid fa-circle-check" style="font-size: 1.4rem; vertical-align: middle; margin-right: 6px;"></i>
+                        Checked in for Raffle Draw!
+                        <p style="font-size: 0.8rem; font-weight: 500; color: var(--text-secondary); margin-top: 4px;">
+                            You are marked as physically present. Keep this screen open during drawing!
+                        </p>
+                    </div>
+                {#else}
+                    <h3 class="card-title" style="background: var(--secondary-grad); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 8px;">
+                        🏆 Closing Ceremony Raffle Check-in
+                    </h3>
+                    <p style="font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 12px;">
+                        To claim prizes from our sponsors in the closing draw, enter the check-in code shown on the main stage screen!
+                    </p>
+                    
+                    <form method="POST" action="/badge/checkin">
+                        <div style="display: flex; gap: 10px;">
+                            <input type="text" name="stageCode" required class="form-control" placeholder="Enter stage code (e.g. JPRIME2026)" style="flex: 1; padding: 8px 12px;">
+                            <button type="submit" class="btn" style="background: var(--secondary-grad); padding: 8px 14px; font-size: 0.85rem;">
+                                Verify
+                            </button>
+                        </div>
+                    </form>
+                    <p style="font-size: 0.75rem; color: var(--text-secondary); margin-top: 8px; font-style: italic;">
+                        Hint: The code displayed on stage is <strong style="color: var(--neon-pink);">JPRIME2026</strong>.
+                    </p>
+                {/if}
+            </div>
+
+            <!-- Clear/Logout Link -->
+            <div style="text-align: center; margin-top: 20px;">
+                <a href="/badge/clear" style="color: var(--text-secondary); font-size: 0.85rem; text-decoration: none; border-bottom: 1px dashed var(--border-color);">
+                    Not {attendee.firstName}? Search for another ticket
+                </a>
+            </div>
+        {/if}
+    {/body}
+{/include}

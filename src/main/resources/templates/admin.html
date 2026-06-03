@@ -1,0 +1,237 @@
+{#include base activePage="admin" title="Admin - JPrime 2026"}
+    {#body}
+        <h1 style="text-align: center; margin-bottom: 6px;">Admin Control Panel</h1>
+        <div class="subtitle">Manage Agenda, Speakers, Sponsors, and Draw Raffle</div>
+
+        <!-- Raffle Draw Entry Card -->
+        <div class="card" style="border-color: var(--neon-pink); background: linear-gradient(135deg, rgba(248, 87, 166, 0.05) 0%, rgba(22, 28, 45, 0.65) 100%);">
+            <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px;">
+                <div>
+                    <h3 style="font-weight: 700; margin-bottom: 2px;">Closing Ceremony Raffle</h3>
+                    <p style="font-size: 0.85rem; color: var(--text-secondary);">
+                        Checked-in: <strong>{checkedInCount}</strong> / {totalAttendees} total attendees present.
+                    </p>
+                </div>
+                <a href="/admin/raffle" class="btn" style="background: var(--secondary-grad);">
+                    <i class="fa-solid fa-trophy"></i> Open Raffle Draw Screen
+                </a>
+            </div>
+        </div>
+
+        <!-- SPEAKERS SECTION -->
+        <div class="card">
+            <h2 class="card-title"><i class="fa-solid fa-users"></i> Add / Edit Speaker</h2>
+            <form method="POST" action="/admin/speakers" style="margin-top: 15px;">
+                <div class="grid-2">
+                    <div class="form-group">
+                        <label class="form-label" for="firstName">First Name</label>
+                        <input type="text" id="firstName" name="firstName" required class="form-control">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="lastName">Last Name</label>
+                        <input type="text" id="lastName" name="lastName" required class="form-control">
+                    </div>
+                </div>
+                <div class="grid-2">
+                    <div class="form-group">
+                        <label class="form-label" for="company">Company</label>
+                        <input type="text" id="company" name="company" required class="form-control">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="twitter">Twitter / X Handle</label>
+                        <input type="text" id="twitter" name="twitter" class="form-control" placeholder="e.g. joshlong">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="speakerEmail">Email</label>
+                    <input type="email" id="speakerEmail" name="email" required class="form-control">
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="bio">Bio</label>
+                    <textarea id="bio" name="bio" rows="2" class="form-control"></textarea>
+                </div>
+                <button type="submit" class="btn" style="width: 100%;">
+                    Save Speaker
+                </button>
+            </form>
+
+            <h3 style="margin-top: 25px; font-size: 1.1rem; border-bottom: 1px solid var(--border-color); padding-bottom: 6px;">Current Speakers</h3>
+            <div style="overflow-x: auto;">
+                <table class="admin-table">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Company</th>
+                            <th>Email</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {#for speaker in speakers}
+                            <tr>
+                                <td><strong>{speaker.getFullName}</strong></td>
+                                <td>{speaker.company}</td>
+                                <td style="font-size: 0.8rem; color: var(--text-secondary);">{speaker.email}</td>
+                                <td>
+                                    <a href="/admin/speakers/{speaker.id}/delete" class="btn btn-danger" style="padding: 4px 8px; font-size: 0.75rem;">Delete</a>
+                                </td>
+                            </tr>
+                        {/for}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- SESSIONS SECTION -->
+        <div class="card">
+            <h2 class="card-title"><i class="fa-solid fa-calendar-days"></i> Add / Edit Session</h2>
+            <form method="POST" action="/admin/sessions" style="margin-top: 15px;">
+                <div class="form-group">
+                    <label class="form-label" for="sessionTitle">Title</label>
+                    <input type="text" id="sessionTitle" name="title" required class="form-control">
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="sessionDesc">Description (Optional)</label>
+                    <textarea id="sessionDesc" name="description" rows="2" class="form-control"></textarea>
+                </div>
+                <div class="grid-2">
+                    <div class="form-group">
+                        <label class="form-label" for="hallName">Hall Name</label>
+                        <select id="hallName" name="hallName" class="form-control" style="background: var(--bg-dark);">
+                            <option value="">-- Break / Registration (No Hall) --</option>
+                            <option value="Hall A">Hall A</option>
+                            <option value="Hall B">Hall B</option>
+                            <option value="Workshops">Workshops</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="speakerId">Speaker</label>
+                        <select id="speakerId" name="speakerId" class="form-control" style="background: var(--bg-dark);">
+                            <option value="">-- None / Break --</option>
+                            {#for speaker in speakers}
+                                <option value="{speaker.id}">{speaker.getFullName} ({speaker.company})</option>
+                            {/for}
+                        </select>
+                    </div>
+                </div>
+                <div class="grid-2">
+                    <div class="form-group">
+                        <label class="form-label" for="startTime">Start Time</label>
+                        <input type="datetime-local" id="startTime" name="startTime" required class="form-control">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="endTime">End Time</label>
+                        <input type="datetime-local" id="endTime" name="endTime" required class="form-control">
+                    </div>
+                </div>
+                <button type="submit" class="btn" style="width: 100%;">
+                    Save Session
+                </button>
+            </form>
+
+            <h3 style="margin-top: 25px; font-size: 1.1rem; border-bottom: 1px solid var(--border-color); padding-bottom: 6px;">Current Agenda Sessions</h3>
+            <div style="overflow-x: auto;">
+                <table class="admin-table">
+                    <thead>
+                        <tr>
+                            <th>Time</th>
+                            <th>Hall</th>
+                            <th>Title</th>
+                            <th>Speaker</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {#for session in sessions}
+                            <tr>
+                                <td style="font-size: 0.8rem; font-weight: 600;">{session.startTime.toLocalTime}</td>
+                                <td>
+                                    {#if session.hallName}
+                                        <span class="hall-tag {#if session.hallName == 'Hall A'}hall-a{#else if session.hallName == 'Hall B'}hall-b{#else}hall-workshops{/if}" style="font-size: 0.65rem; margin: 0;">
+                                            {session.hallName}
+                                        </span>
+                                    {#else}
+                                        <span class="hall-tag hall-break" style="font-size: 0.65rem; margin: 0;">Break</span>
+                                    {/if}
+                                </td>
+                                <td><span style="font-size: 0.85rem; font-weight: 500;">{session.title}</span></td>
+                                <td style="font-size: 0.8rem; color: var(--text-secondary);">
+                                    {#if session.speaker}{session.speaker.getFullName}{#else}-{/if}
+                                </td>
+                                <td>
+                                    <a href="/admin/sessions/{session.id}/delete" class="btn btn-danger" style="padding: 4px 8px; font-size: 0.75rem;">Delete</a>
+                                </td>
+                            </tr>
+                        {/for}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- SPONSORS SECTION -->
+        <div class="card">
+            <h2 class="card-title"><i class="fa-solid fa-gift"></i> Add / Edit Sponsor</h2>
+            <form method="POST" action="/admin/sponsors" enctype="multipart/form-data" style="margin-top: 15px;">
+                <div class="grid-2">
+                    <div class="form-group">
+                        <label class="form-label" for="sponsorName">Sponsor Name</label>
+                        <input type="text" id="sponsorName" name="name" required class="form-control">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="level">Partnership Level</label>
+                        <select id="level" name="level" required class="form-control" style="background: var(--bg-dark);">
+                            <option value="Gold">Gold Partner</option>
+                            <option value="Silver">Silver Partner</option>
+                            <option value="Bronze">Bronze Partner</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="grid-2">
+                    <div class="form-group">
+                        <label class="form-label" for="secretCode">Secret Passport Code</label>
+                        <input type="text" id="secretCode" name="secretCode" required class="form-control" placeholder="e.g. SPONSOR2026">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="logoFile">Upload Logo File</label>
+                        <input type="file" id="logoFile" name="logoFile" class="form-control">
+                    </div>
+                </div>
+                <button type="submit" class="btn" style="width: 100%;">
+                    Save Sponsor
+                </button>
+            </form>
+
+            <h3 style="margin-top: 25px; font-size: 1.1rem; border-bottom: 1px solid var(--border-color); padding-bottom: 6px;">Current Sponsors</h3>
+            <div style="overflow-x: auto;">
+                <table class="admin-table">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Level</th>
+                            <th>Secret Stamp Code</th>
+                            <th>Logo File</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {#for sponsor in sponsors}
+                            <tr>
+                                <td><strong>{sponsor.name}</strong></td>
+                                <td>
+                                    <span class="badge-tag {#if sponsor.level == 'Gold'}badge-gold{#else if sponsor.level == 'Silver'}badge-silver{#else}badge-bronze{/if}">
+                                        {sponsor.level}
+                                    </span>
+                                </td>
+                                <td><code style="color: var(--neon-blue); font-weight: 700;">{sponsor.secretCode}</code></td>
+                                <td style="font-size: 0.8rem; color: var(--text-secondary);">{sponsor.logoFileName}</td>
+                                <td>
+                                    <a href="/admin/sponsors/{sponsor.id}/delete" class="btn btn-danger" style="padding: 4px 8px; font-size: 0.75rem;">Delete</a>
+                                </td>
+                            </tr>
+                        {/for}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    {/body}
+{/include}

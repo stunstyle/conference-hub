@@ -1,0 +1,19 @@
+<div id="bookmark-wrapper-{sessionId}" style="display: inline-block;">
+    {#if isBookmarked}
+        <button hx-delete="/schedule/bookmark/{sessionId}" 
+                hx-target="#bookmark-wrapper-{sessionId}" 
+                hx-swap="outerHTML"
+                class="bookmark-icon-btn active"
+                title="Remove from Schedule">
+            <i class="fa-solid fa-star"></i>
+        </button>
+    {#else}
+        <button hx-post="/schedule/bookmark/{sessionId}" 
+                hx-target="#bookmark-wrapper-{sessionId}" 
+                hx-swap="outerHTML"
+                class="bookmark-icon-btn"
+                title="Add to Schedule">
+            <i class="fa-regular fa-star"></i>
+        </button>
+    {/if}
+</div>

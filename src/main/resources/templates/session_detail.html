@@ -1,0 +1,183 @@
+{#include base activePage="schedule" title=title}
+    {#body}
+        <!-- Back Button -->
+        <a href="/schedule" class="btn btn-secondary" style="margin-bottom: 20px; padding: 8px 14px; font-size: 0.85rem;">
+            <i class="fa-solid fa-arrow-left"></i> Back to Agenda
+        </a>
+
+        <!-- Talk Main Card -->
+        <div class="card" style="border-left: 4px solid var(--neon-blue);">
+            <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 10px;">
+                <span class="hall-tag {#if session.hallName == 'Hall A'}hall-a{#else if session.hallName == 'Hall B'}hall-b{#else}hall-workshops{/if}">
+                    {session.hallName}
+                </span>
+                <span style="font-size: 0.85rem; font-weight: 700; color: var(--neon-blue);">
+                    {session.startTime.toLocalTime} - {session.endTime.toLocalTime}
+                </span>
+            </div>
+            
+            <h1 style="text-align: left; font-size: 1.6rem; margin-top: 10px; margin-bottom: 12px; line-height: 1.25;">
+                {session.title}
+            </h1>
+            
+            <p style="font-size: 0.95rem; color: var(--text-secondary); line-height: 1.5; margin-bottom: 20px; white-space: pre-line;">
+                {session.description}
+            </p>
+
+            <!-- Bookmarking State -->
+            <div style="display: flex; align-items: center; gap: 8px;">
+                <span style="font-size: 0.85rem; color: var(--text-secondary);">Bookmark status:</span>
+                {#include bookmark_btn sessionId=session.id isBookmarked=isBookmarked /}
+            </div>
+        </div>
+
+        <!-- Speaker Profiles -->
+        {#if session.speaker}
+            <h2 style="font-size: 1.2rem; margin-top: 24px; margin-bottom: 12px; display: flex; align-items: center; gap: 8px;">
+                <span style="color: var(--neon-blue);"><i class="fa-solid fa-users"></i></span> About the Speaker(s)
+            </h2>
+            
+            <div class="card">
+                <div style="display: flex; gap: 14px; align-items: flex-start; margin-bottom: 16px;">
+                    <div class="sponsor-logo-placeholder" style="width: 48px; height: 48px; flex-shrink: 0; font-size: 1.1rem; border-radius: 50%;">
+                        {session.speaker.firstName.charAt(0)}{session.speaker.lastName.charAt(0)}
+                    </div>
+                    <div>
+                        <h3 style="font-size: 1.1rem; font-weight: 700; margin-bottom: 2px;">{session.speaker.getFullName}</h3>
+                        <p style="font-size: 0.8rem; color: var(--neon-blue); font-weight: 600; text-transform: uppercase;">
+                            {session.speaker.company}
+                        </p>
+                        {#if session.speaker.twitter}
+                            <a href="https://twitter.com/{session.speaker.twitter}" target="_blank" style="color: var(--text-secondary); text-decoration: none; font-size: 0.8rem; display: inline-flex; align-items: center; gap: 4px; margin-top: 4px;">
+                                <i class="fa-brands fa-twitter" style="color: #1da1f2;"></i> @{session.speaker.twitter}
+                            </a>
+                        {/if}
+                    </div>
+                </div>
+                {#if session.speaker.bio}
+                    <p style="font-size: 0.85rem; color: var(--text-secondary); line-height: 1.45; white-space: pre-line;">
+                        {session.speaker.bio}
+                    </p>
+                {/if}
+            </div>
+
+            {#if session.coSpeaker}
+                <div class="card" style="margin-top: -6px;">
+                    <div style="display: flex; gap: 14px; align-items: flex-start; margin-bottom: 16px;">
+                        <div class="sponsor-logo-placeholder" style="width: 48px; height: 48px; flex-shrink: 0; font-size: 1.1rem; border-radius: 50%;">
+                            {session.coSpeaker.firstName.charAt(0)}{session.coSpeaker.lastName.charAt(0)}
+                        </div>
+                        <div>
+                            <h3 style="font-size: 1.1rem; font-weight: 700; margin-bottom: 2px;">{session.coSpeaker.getFullName}</h3>
+                            <p style="font-size: 0.8rem; color: var(--neon-blue); font-weight: 600; text-transform: uppercase;">
+                                {session.coSpeaker.company}
+                            </p>
+                            {#if session.coSpeaker.twitter}
+                                <a href="https://twitter.com/{session.coSpeaker.twitter}" target="_blank" style="color: var(--text-secondary); text-decoration: none; font-size: 0.8rem; display: inline-flex; align-items: center; gap: 4px; margin-top: 4px;">
+                                    <i class="fa-brands fa-twitter" style="color: #1da1f2;"></i> @{session.coSpeaker.twitter}
+                                </a>
+                            {/if}
+                        </div>
+                    </div>
+                    {#if session.coSpeaker.bio}
+                        <p style="font-size: 0.85rem; color: var(--text-secondary); line-height: 1.45; white-space: pre-line;">
+                            {session.coSpeaker.bio}
+                        </p>
+                    {/if}
+                </div>
+            {/if}
+        {/if}
+
+        <!-- Rate/Feedback Section -->
+        <h2 id="feedback" style="font-size: 1.2rem; margin-top: 24px; margin-bottom: 12px; display: flex; align-items: center; gap: 8px;">
+            <span style="color: var(--neon-pink);"><i class="fa-solid fa-star-half-stroke"></i></span> Rate this Talk
+        </h2>
+        
+        <div class="card" id="feedback-card">
+            <form hx-post="/schedule/{session.id}/feedback" hx-target="#feedback-card" hx-swap="innerHTML">
+                <div class="form-group">
+                    <label class="form-label">Your Rating</label>
+                    <div style="display: flex; gap: 12px; margin-top: 4px;">
+                        <label style="cursor: pointer; display: flex; align-items: center; gap: 4px; font-weight: 600;">
+                            <input type="radio" name="rating" value="5" checked style="accent-color: var(--neon-pink);">
+                            5 ★
+                        </label>
+                        <label style="cursor: pointer; display: flex; align-items: center; gap: 4px; font-weight: 600;">
+                            <input type="radio" name="rating" value="4" style="accent-color: var(--neon-pink);">
+                            4 ★
+                        </label>
+                        <label style="cursor: pointer; display: flex; align-items: center; gap: 4px; font-weight: 600;">
+                            <input type="radio" name="rating" value="3" style="accent-color: var(--neon-pink);">
+                            3 ★
+                        </label>
+                        <label style="cursor: pointer; display: flex; align-items: center; gap: 4px; font-weight: 600;">
+                            <input type="radio" name="rating" value="2" style="accent-color: var(--neon-pink);">
+                            2 ★
+                        </label>
+                        <label style="cursor: pointer; display: flex; align-items: center; gap: 4px; font-weight: 600;">
+                            <input type="radio" name="rating" value="1" style="accent-color: var(--neon-pink);">
+                            1 ★
+                        </label>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="comment">Comments (Optional)</label>
+                    <textarea id="comment" name="comment" rows="2" class="form-control" placeholder="What did you like or think could be improved?"></textarea>
+                </div>
+                <button type="submit" class="btn" style="background: var(--secondary-grad); width: 100%;">
+                    Submit Review
+                </button>
+            </form>
+        </div>
+
+        <!-- Live Q&A Section -->
+        <h2 style="font-size: 1.2rem; margin-top: 24px; margin-bottom: 12px; display: flex; align-items: center; gap: 8px;">
+            <span style="color: var(--neon-blue);"><i class="fa-solid fa-circle-question"></i></span> Live Q&amp;A
+        </h2>
+        
+        <div class="card" style="padding: 16px;">
+            <!-- Question Submit Form -->
+            <form hx-post="/schedule/{session.id}/qa" 
+                  hx-target="#qa-list-content" 
+                  hx-on::after-request="this.reset()"
+                  style="display: flex; flex-direction: column; gap: 10px; margin-bottom: 16px; border-bottom: 1px solid var(--border-color); padding-bottom: 16px;">
+                <div style="display: flex; gap: 10px;">
+                    <input type="text" name="sender" class="form-control" placeholder="Your Name (Optional)" style="flex: 1; padding: 8px 12px;">
+                    <button type="submit" class="btn" style="padding: 8px 16px;">Ask</button>
+                </div>
+                <input type="text" name="questionText" required class="form-control" placeholder="Ask a question for the speakers..." style="padding: 8px 12px;">
+            </form>
+
+            <!-- Question list which updates every 3s -->
+            <div id="qa-list-content" hx-get="/schedule/{session.id}/qa" hx-trigger="every 3s">
+                {#include qa_list questions=questions /}
+            </div>
+        </div>
+
+        <!-- Session Live Chat Section -->
+        <h2 style="font-size: 1.2rem; margin-top: 24px; margin-bottom: 12px; display: flex; align-items: center; gap: 8px;">
+            <span style="color: var(--neon-green);"><i class="fa-solid fa-comments"></i></span> Room Chat
+        </h2>
+
+        <div class="card" style="padding: 0;">
+            <div class="chat-container">
+                <!-- Chat messages list, polling every 3 seconds -->
+                <div id="chat-messages-content" class="chat-messages" hx-get="/schedule/{session.id}/chat" hx-trigger="every 3s">
+                    {#include chat_list messages=messages /}
+                </div>
+                
+                <!-- Chat submit bar -->
+                <form hx-post="/schedule/{session.id}/chat" 
+                      hx-target="#chat-messages-content" 
+                      hx-on::after-request="this.reset()" 
+                      class="chat-input-bar">
+                    <input type="text" name="sender" class="form-input" placeholder="Name" style="max-width: 80px; border-right: 1px solid var(--border-color); font-size: 0.85rem; padding: 10px;">
+                    <input type="text" name="message" required class="form-input" placeholder="Type a message..." style="padding: 10px 14px;">
+                    <button type="submit" class="btn" style="border-radius: 0; border: none; padding: 0 16px; background: var(--accent-grad);">
+                        <i class="fa-solid fa-paper-plane"></i>
+                    </button>
+                </form>
+            </div>
+        </div>
+    {/body}
+{/include}

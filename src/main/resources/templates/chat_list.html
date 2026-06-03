@@ -1,0 +1,14 @@
+{#if messages.isEmpty}
+    <div style="text-align: center; padding: 20px; color: var(--text-secondary); font-size: 0.85rem;">
+        No messages yet. Start the conversation!
+    </div>
+{#else}
+    {#for msg in messages}
+        <div class="chat-bubble" style="margin-bottom: 8px; width: 100%;">
+            <div class="chat-meta" style="font-size: 0.72rem; color: var(--text-secondary); margin-bottom: 2px;">
+                <span style="color: var(--neon-blue); font-weight: 600;">{msg.sender}</span> &bull; {msg.timestamp.toLocalTime}
+            </div>
+            <div style="font-size: 0.9rem; word-break: break-word;">{msg.message}</div>
+        </div>
+    {/for}
+{/if}

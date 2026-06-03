@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{title ?: "JPrime 2026 Conference Hub"}</title>
+    <link rel="stylesheet" href="/css/style.css">
+    <!-- FontAwesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- HTMX CDN -->
+    <script src="https://unpkg.com/htmx.org@1.9.12"></script>
+</head>
+<body>
+    <header style="display: flex; justify-content: flex-end; padding: 15px 20px; position: absolute; top: 0; right: 0; z-index: 100;">
+        {#if !currentUser}
+            <a href="/login" class="btn" style="padding: 6px 12px; font-size: 0.85rem; border-radius: 100px; background: rgba(255,255,255,0.1);"><i class="fa-solid fa-right-to-bracket"></i> Claim Ticket</a>
+        {#else}
+            <div style="display: flex; gap: 10px; align-items: center;">
+                <span style="font-size: 0.85rem; color: var(--text-secondary);"><i class="fa-solid fa-user"></i> {currentUser.firstName}</span>
+                {#if currentUser.isAdmin}
+                    <a href="/admin" class="btn" style="padding: 6px 12px; font-size: 0.85rem; border-radius: 100px; background: var(--neon-pink); color: white; border: none;"><i class="fa-solid fa-gears"></i> Admin</a>
+                {/if}
+                <a href="/login/logout" class="btn" style="padding: 6px 12px; font-size: 0.85rem; border-radius: 100px; background: rgba(255,255,255,0.1);"><i class="fa-solid fa-right-from-bracket"></i></a>
+            </div>
+        {/if}
+    </header>
+    <div class="container" style="padding-top: 50px;">
+        {#insert body}
+            <p>No content provided</p>
+        {/insert}
+    </div>
+
+    <!-- Navigation Bar -->
+    <nav class="bottom-nav">
+        <a href="/" class="nav-item {activePage == 'dashboard' ? 'active' : ''}">
+            <i class="fa-solid fa-house"></i>
+            <span>Dashboard</span>
+        </a>
+        <a href="/schedule" class="nav-item {activePage == 'schedule' ? 'active' : ''}">
+            <i class="fa-solid fa-calendar-days"></i>
+            <span>Schedule</span>
+        </a>
+        <a href="/badge" class="nav-item {activePage == 'badge' ? 'active' : ''}">
+            {#if currentUser}
+                <i class="fa-solid fa-id-badge"></i>
+                <span>My Badge</span>
+            {#else}
+                <i class="fa-solid fa-ticket"></i>
+                <span>Claim Ticket</span>
+            {/if}
+        </a>
+        {#if currentUser}
+            <a href="/passport" class="nav-item {activePage == 'passport' ? 'active' : ''}">
+                <i class="fa-solid fa-passport"></i>
+                <span>Stamps</span>
+            </a>
+        {/if}
+        <a href="/info" class="nav-item {activePage == 'info' ? 'active' : ''}">
+            <i class="fa-solid fa-circle-info"></i>
+            <span>Guide</span>
+        </a>
+        <a href="/speakers" class="nav-item {activePage == 'speakers' ? 'active' : ''}">
+            <i class="fa-solid fa-microphone"></i>
+            <span>Speakers</span>
+        </a>
+        {#if currentUser && currentUser.isAdmin}
+            <a href="/admin" class="nav-item {activePage == 'admin' ? 'active' : ''}">
+                <i class="fa-solid fa-gears"></i>
+                <span>Admin</span>
+            </a>
+        {/if}
+    </nav>
+</body>
+</html>

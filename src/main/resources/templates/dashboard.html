@@ -1,0 +1,138 @@
+{#include base activePage="dashboard" title="Dashboard - JPrime 2026"}
+    {#body}
+        <div class="text-center" style="margin-bottom: 24px;">
+            <h1 style="font-size: 2.2rem; font-weight: 800; margin-bottom: 6px;">JPrime 2026</h1>
+            <div class="subtitle" style="margin-bottom: 0;">Ultimate Conference Companion</div>
+        </div>
+
+
+
+        <div class="dashboard-grid">
+            <!-- Left Column: Sessions -->
+            <div>
+                <!-- Happening Now Section -->
+        <h2 style="font-size: 1.3rem; margin-bottom: 12px; display: flex; align-items: center; gap: 8px;">
+            <span style="color: var(--neon-pink);"><i class="fa-solid fa-bolt"></i></span> Happening Now
+        </h2>
+
+        {#if liveSessions.isEmpty}
+            <div class="card text-center" style="padding: 30px; color: var(--text-secondary);">
+                <i class="fa-solid fa-bed" style="font-size: 2rem; margin-bottom: 10px; display: block;"></i>
+                No active talks at this time. Check the schedule to see what's planned!
+            </div>
+        {#else}
+            {#for session in liveSessions}
+                <div class="card">
+                    <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+                        {#if session.hallName}
+                            <span class="hall-tag {#if session.hallName == 'Hall A'}hall-a{#else if session.hallName == 'Hall B'}hall-b{#else}hall-workshops{/if}">
+                                {session.hallName}
+                            </span>
+                        {#else}
+                            <span class="hall-tag hall-break">Break / Event</span>
+                        {/if}
+                        <span style="font-size: 0.8rem; font-weight: 600; color: var(--neon-blue);">
+                            {session.startTime.toLocalTime} - {session.endTime.toLocalTime}
+                        </span>
+                    </div>
+                    <h3 style="margin: 8px 0 4px 0; font-size: 1.15rem; line-height: 1.3;">
+                        <a href="/schedule/{session.id}" style="color: inherit; text-decoration: none; hover: underline;">
+                            {session.title}
+                        </a>
+                    </h3>
+                    {#if session.speaker}
+                        <p style="font-size: 0.9rem; color: var(--text-secondary); margin-bottom: 12px;">
+                            By <strong>{session.speaker.getFullName}</strong>
+                            {#if session.coSpeaker} &amp; <strong>{session.coSpeaker.getFullName}</strong>{/if}
+                        </p>
+                    {/if}
+                    <div style="display: flex; gap: 10px;">
+                        <a href="/schedule/{session.id}" class="btn btn-secondary" style="padding: 6px 12px; font-size: 0.8rem;">
+                            <i class="fa-solid fa-comments"></i> Q&amp;A &amp; Chat
+                        </a>
+                        <a href="/schedule/{session.id}#feedback" class="btn" style="padding: 6px 12px; font-size: 0.8rem; background: var(--secondary-grad);">
+                            <i class="fa-solid fa-star"></i> Rate Session
+                        </a>
+                    </div>
+                </div>
+            {/for}
+        {/if}
+
+        <!-- Up Next Section -->
+        <h2 style="font-size: 1.3rem; margin-top: 24px; margin-bottom: 12px; display: flex; align-items: center; gap: 8px;">
+            <span style="color: var(--neon-blue);"><i class="fa-solid fa-circle-arrow-right"></i></span> Up Next
+        </h2>
+
+        {#if upNext.isEmpty}
+            <div class="card text-center" style="padding: 20px; color: var(--text-secondary);">
+                Nothing up next. Check back tomorrow!
+            </div>
+        {#else}
+            {#for session in upNext}
+                <div class="card" style="padding: 14px 20px; margin-bottom: 10px;">
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <div style="flex: 1; padding-right: 12px;">
+                            <h4 style="font-size: 0.95rem; font-weight: 600; line-height: 1.3;">
+                                <a href="/schedule/{session.id}" style="color: inherit; text-decoration: none;">{session.title}</a>
+                            </h4>
+                            {#if session.speaker}
+                                <span style="font-size: 0.8rem; color: var(--text-secondary);">
+                                    {session.speaker.getFullName}
+                                </span>
+                            {/if}
+                        </div>
+                        <div style="text-align: right; min-width: 90px;">
+                            {#if session.hallName}
+                                <span class="hall-tag {#if session.hallName == 'Hall A'}hall-a{#else if session.hallName == 'Hall B'}hall-b{#else}hall-workshops{/if}" style="font-size: 0.65rem;">
+                                    {session.hallName}
+                                </span>
+                            {#else}
+                                <span class="hall-tag hall-break" style="font-size: 0.65rem;">
+                                    Break / Event
+                                </span>
+                            {/if}
+                            <div style="font-size: 0.8rem; font-weight: 700; color: var(--neon-blue); margin-top: 4px;">
+                                {session.startTime.toLocalTime}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {/for}
+        {/if}
+
+            </div>
+            
+            <!-- Right Column: Interactive & Promos -->
+            <div>
+                <!-- Live Announcements Banner Placeholder -->
+                <div id="announcements-container"
+                     hx-get="/dashboard/announcements" 
+                     hx-trigger="load, every 10s">
+                     <!-- Announcements load here -->
+                </div>
+
+                <!-- Sponsor Stamp Promo Card -->
+                <div class="card" style="margin-top: 0; background: linear-gradient(135deg, rgba(56, 239, 125, 0.08) 0%, rgba(22, 28, 45, 0.65) 100%); border-color: rgba(56, 239, 125, 0.2);">
+            <div style="display: flex; gap: 14px; align-items: center;">
+                <div style="font-size: 2rem; color: var(--neon-green);">
+                    <i class="fa-solid fa-gift"></i>
+                </div>
+                <div>
+                    <h3 style="font-weight: 700; margin-bottom: 2px;">Sponsor stamp game</h3>
+                    <p style="font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 8px;">
+                        Visit our sponsors, scan their codes, and get a surprise present! First come, best served!
+                    </p>
+                    <a href="/passport" class="btn" style="background: var(--accent-grad); padding: 5px 12px; font-size: 0.75rem;">
+                        Open Stamp Passport
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div style="text-align: center; margin-top: 30px; font-size: 0.75rem; color: var(--text-secondary);">
+            <p>JPrime 2026 Hackathon Hub &bull; Running on Quarkus &amp; Java 25</p>
+        </div>
+            </div> <!-- End Right Column -->
+        </div> <!-- End Dashboard Grid -->
+    {/body}
+{/include}

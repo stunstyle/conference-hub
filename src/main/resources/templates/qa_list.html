@@ -1,0 +1,26 @@
+{#if questions.isEmpty}
+    <div style="text-align: center; padding: 20px; color: var(--text-secondary); font-size: 0.85rem;">
+        No questions yet. Ask something!
+    </div>
+{#else}
+    {#for q in questions}
+        <div class="card" style="padding: 12px 16px; margin-bottom: 10px; background: rgba(255, 255, 255, 0.02); display: flex; justify-content: space-between; align-items: center; gap: 10px;">
+            <div style="flex: 1;">
+                <div class="chat-meta" style="font-size: 0.72rem; color: var(--text-secondary); margin-bottom: 4px;">
+                    <strong>{q.sender}</strong> &bull; {q.timestamp.toLocalTime}
+                </div>
+                <div style="font-size: 0.92rem; font-weight: 500; line-height: 1.35;">{q.questionText}</div>
+            </div>
+            <div style="text-align: center;">
+                <!-- Upvote Action -->
+                <button hx-post="/schedule/qa/{q.id}/upvote" 
+                        hx-target="#qa-list-content" 
+                        class="btn btn-secondary" 
+                        style="padding: 6px 10px; font-size: 0.75rem; display: flex; flex-direction: column; align-items: center; gap: 2px;">
+                    <i class="fa-solid fa-chevron-up" style="color: var(--neon-blue);"></i>
+                    <span style="font-weight: 700;">{q.upvotes}</span>
+                </button>
+            </div>
+        </div>
+    {/for}
+{/if}

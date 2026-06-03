@@ -1,0 +1,42 @@
+{#include base activePage="admin" title="Raffle Draw Stage - JPrime 2026"}
+    {#body}
+        <a href="/admin" class="btn btn-secondary" style="margin-bottom: 20px; padding: 8px 14px; font-size: 0.85rem;">
+            <i class="fa-solid fa-arrow-left"></i> Back to Admin Control
+        </a>
+
+        <h1 style="text-align: center; margin-bottom: 6px;">Closing Ceremony Raffle</h1>
+        <div class="subtitle" style="margin-bottom: 30px;">Big screen display for drawing sponsor prizes</div>
+
+        <div class="card" style="text-align: center; padding: 24px;">
+            <div style="font-size: 0.9rem; color: var(--text-secondary); margin-bottom: 20px;">
+                Attendees checked-in and physically present: <strong style="color: var(--neon-green); font-size: 1.1rem;">{checkedInCount}</strong>
+            </div>
+
+            <!-- Drawing Stage Wrapper -->
+            <div id="raffle-stage" style="margin: 20px 0;">
+                <div id="raffle-box" class="card text-center" style="padding: 40px; background: rgba(0,0,0,0.2); border: 2px dashed var(--border-color);">
+                    <h3 style="margin-bottom: 20px; font-size: 1.4rem;">Juggling Attendees...</h3>
+                    <p style="font-size: 0.9rem; color: var(--text-secondary); margin-bottom: 20px; max-width: 400px; margin-left: auto; margin-right: auto;">
+                        Clicking the button will roll through checked-in names on screen in high suspense, landing on a winner selected via secure cryptographic generation.
+                    </p>
+                    <button hx-get="/admin/raffle/draw-step?step=1" 
+                            hx-target="#raffle-box" 
+                            hx-swap="outerHTML" 
+                            class="btn" 
+                            style="background: var(--secondary-grad); font-size: 1.1rem; padding: 12px 24px;">
+                        <i class="fa-solid fa-play"></i> Start Drawing!
+                    </button>
+                </div>
+            </div>
+            
+            <div style="margin-top: 30px; border-top: 1px dashed var(--border-color); padding-top: 20px;">
+                <h4 style="font-size: 0.9rem; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 10px;">Raffle Rules</h4>
+                <div style="font-size: 0.85rem; color: var(--text-secondary); text-align: left; max-width: 500px; margin: 0 auto; display: flex; flex-direction: column; gap: 8px;">
+                    <div>&bull; Attendees must retrieve their badge and enter the stage code <strong style="color: var(--neon-pink);">JPRIME2026</strong>.</div>
+                    <div>&bull; The drawer filters out absent members to ensure prizes go to active crowd members.</div>
+                    <div>&bull; If a drawn winner does not step forward, simply click "Draw Another" to re-roll.</div>
+                </div>
+            </div>
+        </div>
+    {/body}
+{/include}

@@ -1,0 +1,74 @@
+<div id="passport-container">
+    {#if successMsg}
+        <div class="card" style="background: rgba(56, 239, 125, 0.15); border-color: rgba(56, 239, 125, 0.25); color: #a7f3d0; padding: 12px 16px; margin-bottom: 16px; font-weight: 500;">
+            <i class="fa-solid fa-circle-check"></i> {successMsg}
+        </div>
+    {#else if errorMsg}
+        <div class="card" style="background: rgba(239, 68, 68, 0.15); border-color: rgba(239, 68, 68, 0.25); color: #fca5a5; padding: 12px 16px; margin-bottom: 16px; font-weight: 500;">
+            <i class="fa-solid fa-triangle-exclamation"></i> {errorMsg}
+        </div>
+    {/if}
+
+    <!-- Game Card -->
+    <div class="card">
+        <h3 class="card-title">Passport Passcode</h3>
+        <p style="font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 12px;">
+            Visit sponsor booths around the Sofia Tech Park village square, ask for their passport passcode, and input it here to collect your stamp!
+        </p>
+        
+        <form hx-post="/passport/stamp" hx-target="#passport-container" hx-swap="outerHTML">
+            <div style="display: flex; gap: 10px;">
+                <input type="text" name="code" required class="form-control" placeholder="Enter sponsor passcode" style="flex: 1; padding: 8px 12px;">
+                <button type="submit" class="btn" style="padding: 8px 16px;">
+                    Claim
+                </button>
+            </div>
+        </form>
+        
+        <p style="font-size: 0.75rem; color: var(--text-secondary); margin-top: 8px; font-style: italic;">
+            Tester tip: Seeded passcodes include <strong style="color: var(--neon-blue);">TIDE2026</strong>, <strong style="color: var(--neon-blue);">GW2026</strong>, and <strong style="color: var(--neon-blue);">DS2026</strong>.
+        </p>
+    </div>
+
+    <!-- Stamps Passport Grid -->
+    <h3 style="font-size: 1.1rem; margin-top: 24px; margin-bottom: 12px;">Your Stamp Sheet ({unlockedIds.size} / {sponsors.size} Unlocked)</h3>
+    
+    <div class="sponsor-grid">
+        {#for sponsor in sponsors}
+            {@java.lang.Boolean isUnlocked = unlockedIds.contains(sponsor.id)}
+            <div class="sponsor-stamp-card {#if isUnlocked}unlocked{/if}">
+                <div class="sponsor-logo-placeholder">
+                    {sponsor.name.charAt(0)}
+                </div>
+                <div class="sponsor-name">{sponsor.name}</div>
+                <div style="font-size: 0.65rem; font-weight: 700; color: var(--text-secondary); margin-top: 4px; text-transform: uppercase;">
+                    {sponsor.level} Partner
+                </div>
+                {#if !isUnlocked}
+                    <div style="font-size: 0.8rem; color: rgba(255,255,255,0.2); margin-top: 6px;">
+                        <i class="fa-solid fa-lock"></i> Locked
+                    </div>
+                {/if}
+            </div>
+        {/for}
+    </div>
+
+    <!-- Completion / Winner Alert -->
+    {#if unlockedIds.size == sponsors.size && !sponsors.isEmpty}
+        <div class="card winner-overlay" style="margin-top: 30px; border-color: var(--neon-green); background: rgba(56, 239, 125, 0.05); box-shadow: 0 0 15px rgba(56, 239, 125, 0.15);">
+            <div style="font-size: 2.5rem; color: var(--neon-green); margin-bottom: 10px;">
+                <i class="fa-solid fa-trophy"></i>
+            </div>
+            <h2 style="background: var(--accent-grad); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-size: 1.6rem; font-weight: 800;">
+                All Stamps Collected!
+            </h2>
+            <p style="font-size: 0.9rem; color: var(--text-primary); margin-top: 10px; line-height: 1.4;">
+                Awesome! You have visited all sponsor booths. 
+                <br>Head over to the organizers' desk at the registration desk (basement amphitheater) to pick up your surprise present!
+            </p>
+            <p style="font-size: 0.8rem; color: var(--text-secondary); margin-top: 8px;">
+                Remember, presents are <em>first come, best served!</em>
+            </p>
+        </div>
+    {/if}
+</div>
