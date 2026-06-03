@@ -10,12 +10,13 @@ This application provides everything attendees, sponsors, and organizers need to
 
 1. **Live Dashboard ("Happening Now" & "Up Next"):** Displays live talks, hall schedules, local caterings, and WiFi info with fallbacks for off-hours testing.
 2. **Interactive Agenda (HTMX-driven):** Timeline layouts that allow users to filter by Hall (Hall A, Hall B, Workshops) and customize a personal **My Schedule** folder.
-3. **Ticket Finder & Digital Badge:** Allows users to find their registration ticket by email and generates an inline check-in QR code dynamically using ZXing (no external API calls).
+3. **Ticket Finder & Digital Badge:** Secure login flow requiring Email and Ticket Code to access the personalized digital badge and dynamic QR code (ZXing).
 4. **Sponsor Passport Stamp Game:** Attendees visit sponsor booths, input validation codes (e.g. `TIDE2026`, `GW2026`), and unlock badges on a digital stamp sheet. Unlocking all badges enters them in the closing draw.
 5. **Real-time Session Chat & Q&A Board:** Dynamic shared chat walls and Q&A boards where attendees can post and upvote questions. Employs 3s HTMX short-polling (no custom JS/TS).
 6. **Physical Raffle & Animated Juggler Screen:** Big-screen raffle stage that rolls through attendee names in a slot-machine roll simulation, selecting the winner via secure cryptographical generation (`java.security.SecureRandom`).
 7. **Full Admin Control Dashboard:** Secure CRUD dashboard at `/admin` to add/edit/delete Speakers, Sessions/Agenda items, and Sponsors on the fly.
-8. **Survival Guide (FAQ):** Access maps, catering details, and parking guidelines (highlighting locations for paid parking and free crossing bridges).
+8. **Live Speakers Directory:** Scrapes and fetches the real JPrime speaker lineup and bios dynamically to populate the schedule.
+9. **Survival Guide (FAQ):** Access maps, catering details, and parking guidelines (highlighting locations for paid parking and free crossing bridges).
 
 ---
 
@@ -59,10 +60,14 @@ mvn clean test
 
 The database automatically seeds mock data if empty (including speakers, sessions, sponsors, and attendees) so you can test all features offline.
 
-* **Seeded Attendee Email Finder:**
-  * `gocata@jprime.io`
-  * `ivan@jprime.io`
-  * `maria@jprime.io`
+* **Seeded Attendee Logins (Email + Ticket Code):**
+  * `gocata@jprime.io` | `JP26-HACK`
+  * `ivan@jprime.io` | `JP26-IVAN`
+  * `georgi@jprime.io` | `JP26-GEORG`
+  * `maria@jprime.io` | `JP26-MARIA`
+  * `dimitar@jprime.io` | `JP26-DIMIT`
+  * `elena@jprime.io` | `JP26-ELENA`
+  * **Admin Account:** `nayden@jprime.io` | `JP26-ADMIN`
 * **Raffle Check-In Stage Code:** `JPRIME2026` (Enter this on your badge card to check in for the draw!).
 * **Sponsor Stamp Passphrases:**
   * Tide: `TIDE2026`
